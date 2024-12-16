@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spell Checker with Animation</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
+    <style>
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            background: linear-gradient(135deg, #f7f7f7, #eaeaf4);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: #5e9ca0;
+        }
+
+        input[type="text"], button {
+            padding: 15px;
+            font-size: 18px;
+            margin-top: 10px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            outline: none;
+            transition: 0.3s ease;
+        }
+
+        input[type="text"]:focus, button:hover {
+            border-color: #4CAF50;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .correct {
+            background-color: #c8e6c9;
+            padding: 5px;
+            border-radius: 4px;
+        }
+
+        .incorrect {
+            background-color: #ffeb3d;
+            padding: 5px;
+            border-radius: 4px;
+        }
+
+        table {
+            width: 80%;
+            margin-top: 20px;
+            border-collapse: collapse;
+            animation: fadeIn 1s ease;
+        }
+
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th {
+            background-color: #f1f1f1;
+        }
+        th, td {
+            padding: 15px;
+            text-align: center;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .correct-sentence {
+            font-weight: bold;
+            color: #2e7d32;
+            font-size: 24px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>🔍 Spell Checker</h1>
+
+    <form action="/check" method="POST">
+        <input type="text" name="user_input" placeholder="Enter Sinhala text" required>
+        <button type="submit">Check</button>
+    </form>
+
+    {% if input_text %}
+        {% if all_correct %}
+            <p class="correct-sentence">✅ All words are correct! Great job!</p>
+        {% else %}
+            {% if suggestions %}
+                <h2>Incorrect Words & Suggestions</h2>
+                <table>
+                    <tr>
+                        <th>Word</th>
+                        <th>Suggestions</th>
+                    </tr>
+                    {% for word, suggestion_list in suggestions.items() %}
+                        <tr>
+                            <td><span class="incorrect">{{ word }}</span></td>
+                            <td>
+                                {% if suggestion_list %}
+                                    {% for suggestion in suggestion_list %}
+                                        {{ suggestion }}
+                                    {% endfor %}
+                                {% else %}
+                                    No suggestions
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% endif %}
+
+            <h3>Corrected Sentence</h3>
+            <p class="correct-sentence">{{ corrected_text }}</p>
+
+        {% endif %}
+    {% endif %}
+
+</body>
+</html>
